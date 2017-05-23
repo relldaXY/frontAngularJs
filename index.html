@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html ng-app="produtosApp">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="resources/script/angular.min.js"></script>
+</head>
+<body ng-controller= "produtosController">
+<form>
+	<!-- cadastro -->
+	<h1>Cadastro</h1>
+	<label for="codigo">Codigo:</label>
+	<input id="codigo" name="codigo" type="text" ng-model="produto.codigo"/>
+	<br>
+	<label for="descricao">Descricao:</label>
+	<input id="descricao" name="descricao" type="text" ng-model="produto.descricao"/>
+	<br>
+	<label for="preco">Preços:</label>
+	<input id="preco" name="preco" type="text" ng-model="produto.preco"/>
+	<br>
+	<button ng-click="salvar(produto)">Salvar</button>
+	<button ng-click="cancelar(produto)">Cancelar</button>
+	
+	<!-- tabela de precos -->
+	<h1>Tabela de Preços</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Codigo</th>
+				<th>Descricao</th>
+				<th>Preco</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr ng-repeat="produto in produtos track by $index">
+				<td ng-dblclick="editar(produto)">{{produto.codigo}}</td>
+				<td ng-dblclick="editar(produto)">{{produto.descricao}}</td>
+				<td ng-dblclick="editar(produto)">{{produto.preco}}</td>
+				<td><a href="" ng-click="editar(produto)">[Editar]</a></td>
+				<td><a href="" ng-click="excluir(produto)">[Excluir]</a></td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+<script type="text/javascript">
+	var app = angular.module('produtosApp', []);
+	//scope é para interagir com html
+	app.controller('produtosController', function($scope, ProdutosService) { // para controlar a tela
+		
+		$scope.produto = {};
+		$scope.produtos = ProdutosService.listar(); //passando esse meu array de produtos para o produtos do html
+		
+		$scope.salvar = function(produto) {
+			ProdutosService.salvar(produto);
+			$scope.produto = {}; //limpa depois de inserir
+		};
+		
+		$scope.excluir = function(produto) {
+			ProdutosService.excluir(produto);
+		};
+		
+		$scope.editar = function(produto) {
+			$scope.produto = angular.copy(produto);
+		};
+		
+		$scope.cancelar = function(produto) {
+			$scope.produto = {};
+		};
+	});
+	
+	app.service('ProdutosService', function() { //para armazenar os dados
+		var produtos  = [{
+			codigo:1,
+			descricao: 'arroz',
+			preco: 2.50
+		},{
+			
+			codigo:2,
+			descricao: 'feijao',
+			preco: 4
+		}];
+		
+		this.salvar = function(produto) {
+			var produtoEncontrado = false;
+			for (var i = 0; i<produtos.length; i++) {
+				if(produtos[i].id == produto[i]) {
+					produtos[i].descricao = produto.descricao; //atualiza
+					produtos[i].preco = produto.preco; // atualiza
+					produtoEncontrado = true;
+					break;
+				}
+			}
+			
+			if(!produtoEncontrado) {
+				produtos.push(produto); // insere na lista o produto do formulario
+			}
+		};
+		
+		this.excluir = function(produto) {
+			for (var i = 0; i<produtos.length; i++) {
+				if(produtos[i].id == produto[i]) {
+					produtos.splice(i, 1);
+					break;
+				}
+			}
+		};
+		
+		this.listar = function() {
+			return produtos;
+		};
+		
+	});
+</script>
+</body>
+</html>
