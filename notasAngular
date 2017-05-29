@@ -1,0 +1,615 @@
+curso angularJS
+
+aula2----------
+
+//temos um exemplo de dataBind_ --> é uma ligacao de variaveis 
+
+<input type="text" ng-model="TextoQualquer">
+	<br/>
+<h1>Olá: {{TextoQualquer}} </h1>
+
+// o que for escrito na caixa "ng-model" sera replicado na tag "h1"
+
+
+
+
+//para inicializar variaveis
+
+<body ng-app ng-init="TextoQualquer='Adller'; OutroTexto='Simas'">
+	<input type="text" ng-model="TextoQualquer">
+	<br/>
+	<h1>Olá: {{TextoQualquer}} </h1>
+	<h2>{{OutroTexto}}</h2>
+</body>
+
+// neste caso a caixa se inicializa com Adller definido no ng-init
+
+
+//Abaixo nos temos os arquivos completos que foram feitos
+
+<html ng-app="loja">
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+<script type="text/javascript" src="resources/script/angular.min.js"></script>
+<script type="text/javascript" src="resources/script/primeiroController.js"></script>
+</head>
+<body ng-controller="primeiroController as user" id="corpo">
+	<input type="text" ng-model="TextoQualquer = 'Adller'">
+	<br/>
+	<h1>Olá: {{TextoQualquer}} </h1>
+	<h2>{{user.meuNome}}</h2>
+	
+	<a href="#" ng-click="addContador();">Add</a>
+	
+	<hr>
+	
+	<h1>Contador: {{contador}}</h1>
+	
+	<hr>
+	
+	<h1>Loop</h1>
+	<ul>
+		<li ng-repeat="x in pessoas" >{{x}}</li>
+	</ul>
+	
+</body>
+</html>
+
+// o ng-click aciona a funcao addContador que incrementa o contador
+
+// o ng-repeat atua sob o array pessoas que é representado pelos elementos "x"
+
+
+
+
+
+var app = angular.module('loja', []);
+
+//$scope faz referencia a tela ou ao html
+app.controller('primeiroController', ['$scope' , function($scope) { //essa function recebe $scope porque trabalha com $scope
+    $scope.user = {meuNome : 'Joao de Souza'}; // objeto user que pode receber atributos
+    
+    $scope.contador = 0;
+    
+    $scope.addContador = function() {
+    	$scope.contador++;
+    };
+    
+    $scope.pessoas = ['Adller', 'Andrey', 'Adriana'];
+    
+}]);
+
+// angular.app --> inicializa o controller ou valida
+
+//app.controller faz esse "primeiroController" funcionar lá no html
+// é passado o $scope e tambem uma function com $scope que é usado na function
+// temos varias variaveis definidas atraves do scope que sao usadas no html 
+
+
+
+
+aula 3 -----------------------------
+
+// o "required" associado ao ng-model fala para o usuario nao deixar em branco o quadro de input
+<input type="text" id="nome" value="nome" ng-model="nome" required="required">
+		<br>
+
+Deep Link --> rotas para htmls
+
+
+
+aula 3 e 4 -------------------------
+
+<html ng-app="loja">
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+<script type="text/javascript" src="resources/script/angular.min.js"></script>
+<script type="text/javascript" src="resources/script/angular-route.js"></script> <!-- pra trabalhar com rota -->
+<script type="text/javascript" src="resources/script/primeiroController.js"></script>
+</head>
+<body id="corpo"> <!-- nao eh necessario ng-controller por causa do "ng-view" -->
+	<h1>Rotas</h1>
+	<div ng-view> <!-- vai carregar o config($routeProvider) -->
+		
+	</div>
+</body>
+</html>
+
+
+---------------------arquivo js de controller
+
+var app = angular.module('loja', ['ngRoute']);
+
+// aqui é um controle de rota sendo carregado ao iniciar a aplicacao
+app.config(function($routeProvider){
+	$routeProvider
+	.when("/", {controller: "listController", templateUrl:"list.html" })
+	.when("/edit/:name", {controller: "editController", templateUrl:"form.html" })
+	.when("/new", {controller: "newController", templateUrl:"form.html" })
+	.otherwise({redirectTo: "/"});
+	
+});
+
+//quando o config for carregado teremos o rootScope carregado para list.html
+app.run(function($rootScope){
+	$rootScope.frutas = ['banana', 'laranja', 'pera' ];	
+});
+
+
+app.controller('listController' , ['$scope','$routeParams', '$location', '$route', '$rootScope', function($scope, $routeParams, $location, $route, $rootScope){
+	
+}]);
+
+app.controller('newController' , ['$scope','$routeParams', '$location', '$route', '$rootScope', function editController ($scope, $routeParams, $location, $route, $rootScope){
+	$scope.title = 'Nova fruta'; //adicionando titulo a pagina
+	$scope.fruta = '';
+	
+	$scope.salvar = function() {
+		$scope.frutas.push($scope.fruta);
+		$location.path('/'); //depois de salvar, redireciona para o index, mostrando as frutas
+	};
+}]);
+
+app.controller('editController' , ['$scope','$routeParams', '$location', '$route', '$rootScope', function editController ($scope, $routeParams, $location, $route, $rootScope){
+	$scope.title = 'Editar Frutas'; //adicionando titulo a pagina
+	$scope.fruta = $routeParams.name; //pegando o nome para editar
+	$scope.frutaIndex = $scope.frutas.indexOf($scope.fruta); // pegando a fruta de dentro da lista
+	
+	$scope.salvar = function() {
+		$scope.frutas[$scope.frutaIndex] = $scope.fruta;
+		$location.path('/'); //depois de salvar, redireciona para o index, mostrando as frutas
+	};
+}]);
+
+
+----- agora teremos arquivos da rota -----
+
+
+//Esse é o list.html que pode ser visto na no app.config
+<html>
+
+<h2>Frutas ({{frutas.length}})</h2>
+
+<ul>
+	<li ng-repeat="fruta in frutas"><a href="#/edit/{{fruta}}">{{fruta}}</a></li>
+	<a href="#/new">Nova</a> 
+</ul>
+
+</html>
+
+
+
+//Esse é o form.html que pode ser visto no app.config
+<html>
+
+<h2>{{title}}</h2>
+
+<form action="#">
+	<input type="text" id="fruta" ng-model="fruta" required="required">
+	<button ng-click="salvar();">Salvar</button>
+</form>
+
+</html>
+
+
+
+---- aula 5 --------------------------------------
+
+
+// basicamente se inicializa as variaveis, objetos e arrays com "ng-init" e depois mostra eles com "ng-bind" ou com {{}} 
+
+<h1>Expressao1</h1>
+<p>{{5+1}}</p>
+
+<!-- temos inicio uma caixa de input com vermelho e depois vem a gosto escrevendo o desejado -->
+<div ng-init="MyColor='red'">
+<input style="background-color: {{MyColor}}" ng-model="MyColor"  value={{Mycolor}}/>
+</div>
+
+<div ng-init="valor1=10 ; valor2=5">
+<p> Resultado: <span ng-bind="valor1*valor2"></span></p> <!-- parece que em qualquer lugar ele pega tudo sobrecrevendo -->
+</div>
+
+<div ng-init="valor3=11 ; valor4=5">
+<p> O Resultado: {{valor3*valor4}}</p>
+</div>
+
+<h1>Uso de objetos</h1>
+
+<div ng-init="person={firstName:'Adller', lastName:'Simas'}">
+<p> Nome usando objeto person: {{person.firstName}}</p>
+</div>
+
+<div ng-init="person={firstName:'Adller', lastName:'Simas'}">
+<p> Nome usando objeto person: <span ng-bind="person.firstName"></span></p>
+</div>
+
+<h1>Uso de Arrays</h1>
+<div ng-init="points=[1,5,3,9,22]">
+<p> Usando array: <span ng-bind="points[3]"></span></p>
+</div>
+
+
+
+----aula 6 -----------------------------------------------
+
+criacao de diretiva
+
+// no html
+<div w3-test-directive> </div>
+
+// no js
+
+var app = angular.module('expressoes', []);
+
+
+app.directive("w3TestDirective", function(){
+	return {
+		template: "Foi feito um construtor em diretriz"
+	};
+});
+
+// vai se mostrado no html o template
+
+
+------maneira para validar um email
+
+<form name="myForm">
+
+<input type="email" name="myAddress" ng-model="text">
+
+<span ng-show="myForm.myAddress.$error.email">Not a valid email address</span>
+
+
+</form>
+
+--------------------------------------------------
+
+
+
+-----aula 7
+
+<!--  aula de filters -->
+<div ng-controller="upperLowerCase">
+
+<h1>Meu nome é {{name | uppercase}}</h1>
+
+</div>
+
+<div ng-controller="arrayDeObjetos">
+	
+	<h1>Loop de objetos</h1>
+	<ul>
+	
+	<li ng-repeat="x in names | orderBy: 'name'">{{x.name + ', ' + x.country}}</li>
+	
+	</ul>
+
+</div>
+
+<div ng-controller="arrayComFiltro">
+	
+	<h1>Loop com filtro</h1>
+	<ul>
+	
+	<li ng-repeat="nome in name | filter: 'y'">{{nome}}</li>
+	
+	</ul>
+
+</div>
+
+
+
+<div ng-controller="filtro">
+	
+	<h1>filtro por model</h1>
+	<input type="text" ng-model="text">
+	<ul>
+	
+	<li ng-repeat="nome in names | filter:text">{{nome}}</li>
+	
+	</ul>
+
+</div>
+
+<div ng-controller="filtroPorEscolha">
+	
+	<h1>filtro por escolha</h1>
+	<table border="1" width="100%">
+		<tr>
+			<th ng-click="orderByMe('name')">Name</th>
+			<th ng-click="orderByMe('country')">Country</th>
+		</tr>
+	<tr>
+	
+	<tr ng-repeat="nome in names | orderBy:myOrderBy">
+		<td>{{nome.name}}</td>
+		<td>{{nome.country}}</td>
+	</tr>
+	</table>
+
+</div>
+
+arquivos js ----
+
+app.controller('upperLowerCase', function($scope){
+	$scope.name = "Adller";
+});
+
+app.controller('arrayDeObjetos', function($scope) {
+	$scope.names = [
+	      {name : 'Adller', country:'Brasil'},
+	      {name : 'Adriana', country:'Argentina'},
+	      {name : 'Andrey', country:'Uruguay'},
+	      {name : 'Balder', country:'Paraguai'}];
+});
+
+app.controller('arrayComFiltro', function($scope){
+	$scope.name = ['Adller', 'Andrey', 'Adriana', 'Valda', 'Maria'];
+});
+
+app.controller('filtro', function($scope){
+	$scope.name = ['Adller', 'Andrey', 'Adriana', 'Valda', 'Maria', 'Bia'];
+});
+
+app.controller('filtroPorEscolha', function($scope) {
+	$scope.names = [
+	      {name : 'Adller', country:'Brasil'},
+	      {name : 'Adriana', country:'Argentina'},
+	      {name : 'Andrey', country:'Uruguay'},
+	      {name : 'Balder', country:'Paraguai'}];
+	
+	$scope.orderByMe = function(x) {
+		$scope.myOrderBy = x;
+	};
+});
+
+
+
+------aula 8 --- Services -- location, timeout, interval
+
+
+// obtencao de enderecos
+app.controller('localization' , function($scope , $location){
+	$scope.myUrl = $location.absUrl();
+});
+
+// muda em 3 seg
+app.controller('timermsg' , function($scope , $timeout){
+	$scope.timermsg = "Oi";
+	$timeout (function() {
+		$scope.timermsg = "Oi depois de 3s";
+	},3000);
+});
+
+// relogio
+app.controller('controllerIntervalo' , function($scope , $interval){
+	$scope.intervalo = new Date().toLocaleTimeString();
+	$interval (function() {
+		$scope.intervalo = new Date().toLocaleTimeString()
+	},1000);
+});
+
+
+//index correspondente ao js acima
+<div ng-controller="localization">
+	<p>A url dessa pagina eh: {{myUrl}}</p>
+
+
+<div ng-controller="timermsg">
+	<p>Uso de timermsg: {{timermsg}}</p>
+</div>
+
+<div ng-controller="controllerIntervalo">
+	<p>Uso de timermsg: {{intervalo}}</p>
+</div>
+
+
+---- aula 9 ---------- http faz solicitação ao servidor e espera por resposta usando servlet
+
+--html
+
+
+<p>Trabalhando com o servidor 1</p><br>
+<button ng-controller="pegarResposta" ng-click="pegarResposta();">Pegar Reposta</button>
+<input type="text" id="resposta">
+
+<p>Trabalhando com o servidor 2</p><br>
+<button ng-controller="pegarResposta2" ng-click="pegarResposta2();">Pegar Reposta</button>
+<input type="text" id="resposta1">
+<input type="text" id="resposta2">
+<input type="text" id="resposta3">
+
+<p>Trabalhando com o servidor 3</p><br>
+<button ng-controller="pegarRespostaErro" ng-click="pegarRespostaErro();">Pegar Reposta</button>
+<input type="text" id="respostaErro">
+
+
+<p>Pegar resposta com o servidor Json</p><br>
+<div ng-controller="pegarRespostaJson">
+	<ul>
+		<li ng-repeat="x in lista">{{x.nome + ' - ' + x.cidade}}</li>
+	</ul>
+
+</div>
+
+---controller
+
+app.controller('pegarResposta' ,function($scope, $http){
+	$scope.pegarResposta = function(){
+		$http.get("pegarRespostaServidor1").then(function (response){//nome do servlet
+			document.getElementById("resposta").value = ""+response.data;
+		});
+	};
+});
+
+app.controller('pegarResposta2' ,function($scope, $http){
+	$scope.pegarResposta2 = function(){
+		$http.get("pegarRespostaServidor1").then(function (response){
+			document.getElementById("resposta1").value = ""+response.data;
+			document.getElementById("resposta2").value = ""+response.status;
+			document.getElementById("resposta3").value = ""+response.statusText;
+		});
+	};
+});
+
+app.controller('pegarRespostaErro' ,function($scope, $http){
+	$scope.pegarRespostaErro = function(){
+		$http.get("pegarRespostaErro").then(function (response){
+			document.getElementById("respostaErro").value = ""+response.statusText;
+		}, function (response){
+			document.getElementById("respostaErro").value = ""+response.statusText;
+		});
+	};
+});
+
+app.controller('pegarRespostaJson' ,function($scope, $http){
+		$http.get("pegarRespostaJson").then(function (response){
+			$scope.lista = $scope.data;
+		});
+});
+
+---- servlets
+
+so metodo doGet
+//servidor 1
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Servidor funcionando");
+		response.getWriter().write("Servlet Ajax AngularJS OK");
+}
+// servidor com erro
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int n = Integer.parseInt("a");
+	}
+
+//servidor json
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json");
+		response.setHeader("Cache-Control", "nocache");
+		response.setCharacterEncoding("utf-8");
+		
+		JSONArray jsonArray = new JSONArray();
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("nome", "Adller");
+		jsonObject.put("cidade", "Florianopolis");
+		jsonArray.put(jsonObject);
+		
+		jsonObject = new JSONObject();
+		jsonObject.put("nome", "Simas");
+		jsonObject.put("cidade", "Fpolis");
+		jsonArray.put(jsonObject);
+		
+		response.getWriter().write(jsonArray.toString());
+	}
+
+
+
+------------------aula 10
+
+usa o servidor json acima, mas trabalha com tabelas
+
+
+-----------------aula 11
+
+aula com selects
+
+
+
+<div ng-controller="seletor">
+	<select>
+		<option ng-repeat="x in names">{{x}}</option>
+	</select>
+	</div>
+
+
+
+aula12-------------- Dom -- inicializacao de variaveis
+
+<div ng-init="myVar = false">
+	<button ng-disabled="myVar">Click me!</button>
+	<p>
+	<input type="checkbox" ng-model="myVar">Button
+	</p>
+	<p>{{myVar}}</p>
+	</div>
+	
+	<p ng-show="true">Mostrando</p>
+	
+	<p ng-show="false">Esconde</p>
+	
+	
+	<div ng-init="hour = 13">
+	
+	<p ng-show="hour > 12">Mostra</p>
+</div>
+
+
+----aula 13 ------
+
+trabalha com  resources
+
+
+------aula 14 ----------
+
+Eventos
+
+
+<div ng-controller="controlClick">
+	
+	<button ng-click="functionClick()">Click-me</button>
+	
+	<p ng-show="showMe">Mostra</p>
+	</div>
+
+app.controller('controlClick', function($scope){
+	$scope.functionClick = function(){
+		$scope.showMe = !$scope.showMe;
+	};
+});
+
+
+------------aula 15 ----------------
+
+------------aula 16 ----------------
+animação se relaciona muito com css
+
+aula 18 -- uso de dependencias
+
+js
+app.factory('UserService' , function(){
+	var users = ["Adller", "Adriana", "Andrey"];
+	
+	return { //sao metodos
+		all: function() {
+			return users;
+		},
+		primeiro: function() {
+			return users[0];
+		}
+		
+	}
+});
+
+//criacao de controle
+primeiroUserController = app.controller("primeiroUserController" , function($scope, UserService) {
+	$scope.primeiro = $UserService.primeiro();
+});
+//ativacao de dependencia
+primeiroUserController.$inject = ["$scope", "UserService"];
+
+
+html
+<div ng-controller="primeiroUserController">
+	<h1>{{primeiro}}</h1>
+</div> 
+
+
+
+aula 19 -- filtro em tabelas, é bom olhar, eu nao vi
+
+
+aula 20 -- importação da bibliotecas e do bootstrap(html) para o index
+
