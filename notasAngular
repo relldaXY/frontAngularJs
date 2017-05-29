@@ -15,14 +15,14 @@ aula2----------
 
 //para inicializar variaveis
 
-<body ng-app ng-init="TextoQualquer='Adller'; OutroTexto='Simas'">
+<body ng-app ng-init="TextoQualquer='Rellda'; OutroTexto='Simas'">
 	<input type="text" ng-model="TextoQualquer">
 	<br/>
 	<h1>Olá: {{TextoQualquer}} </h1>
 	<h2>{{OutroTexto}}</h2>
 </body>
 
-// neste caso a caixa se inicializa com Adller definido no ng-init
+// neste caso a caixa se inicializa com Rellda definido no ng-init
 
 
 //Abaixo nos temos os arquivos completos que foram feitos
@@ -35,7 +35,7 @@ aula2----------
 <script type="text/javascript" src="resources/script/primeiroController.js"></script>
 </head>
 <body ng-controller="primeiroController as user" id="corpo">
-	<input type="text" ng-model="TextoQualquer = 'Adller'">
+	<input type="text" ng-model="TextoQualquer = 'Rellda'">
 	<br/>
 	<h1>Olá: {{TextoQualquer}} </h1>
 	<h2>{{user.meuNome}}</h2>
@@ -76,7 +76,7 @@ app.controller('primeiroController', ['$scope' , function($scope) { //essa funct
     	$scope.contador++;
     };
     
-    $scope.pessoas = ['Adller', 'Andrey', 'Adriana'];
+    $scope.pessoas = ['Rellda', 'Andrey', 'Adriana'];
     
 }]);
 
@@ -218,11 +218,11 @@ app.controller('editController' , ['$scope','$routeParams', '$location', '$route
 
 <h1>Uso de objetos</h1>
 
-<div ng-init="person={firstName:'Adller', lastName:'Simas'}">
+<div ng-init="person={firstName:'Rellda', lastName:'Simas'}">
 <p> Nome usando objeto person: {{person.firstName}}</p>
 </div>
 
-<div ng-init="person={firstName:'Adller', lastName:'Simas'}">
+<div ng-init="person={firstName:'Rellda', lastName:'Simas'}">
 <p> Nome usando objeto person: <span ng-bind="person.firstName"></span></p>
 </div>
 
@@ -335,28 +335,28 @@ app.directive("w3TestDirective", function(){
 arquivos js ----
 
 app.controller('upperLowerCase', function($scope){
-	$scope.name = "Adller";
+	$scope.name = "Rellda";
 });
 
 app.controller('arrayDeObjetos', function($scope) {
 	$scope.names = [
-	      {name : 'Adller', country:'Brasil'},
+	      {name : 'Rellda', country:'Brasil'},
 	      {name : 'Adriana', country:'Argentina'},
 	      {name : 'Andrey', country:'Uruguay'},
 	      {name : 'Balder', country:'Paraguai'}];
 });
 
 app.controller('arrayComFiltro', function($scope){
-	$scope.name = ['Adller', 'Andrey', 'Adriana', 'Valda', 'Maria'];
+	$scope.name = ['Rellda', 'Andrey', 'Adriana', 'Valda', 'Maria'];
 });
 
 app.controller('filtro', function($scope){
-	$scope.name = ['Adller', 'Andrey', 'Adriana', 'Valda', 'Maria', 'Bia'];
+	$scope.name = ['Rellda', 'Andrey', 'Adriana', 'Valda', 'Maria', 'Bia'];
 });
 
 app.controller('filtroPorEscolha', function($scope) {
 	$scope.names = [
-	      {name : 'Adller', country:'Brasil'},
+	      {name : 'Rellda', country:'Brasil'},
 	      {name : 'Adriana', country:'Argentina'},
 	      {name : 'Andrey', country:'Uruguay'},
 	      {name : 'Balder', country:'Paraguai'}];
@@ -493,7 +493,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		JSONArray jsonArray = new JSONArray();
 		
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("nome", "Adller");
+		jsonObject.put("nome", "Rellda");
 		jsonObject.put("cidade", "Florianopolis");
 		jsonArray.put(jsonObject);
 		
@@ -580,7 +580,7 @@ aula 18 -- uso de dependencias
 
 js
 app.factory('UserService' , function(){
-	var users = ["Adller", "Adriana", "Andrey"];
+	var users = ["rellda", "Adriana", "Andrey"];
 	
 	return { //sao metodos
 		all: function() {
@@ -604,7 +604,7 @@ primeiroUserController.$inject = ["$scope", "UserService"];
 html
 <div ng-controller="primeiroUserController">
 	<h1>{{primeiro}}</h1>
-</div> 
+F</div> 
 
 
 
